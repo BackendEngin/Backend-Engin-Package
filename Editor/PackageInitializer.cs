@@ -12,12 +12,14 @@ public static class PackageInitializer
 
     private static void CreateFolderIfNotExists()
     {
+        Debug.Log("started");
         string folderPath = "Assets/BackendEngin"; // Change this to your desired folder path
 
         if (!AssetDatabase.IsValidFolder(folderPath))
         {
             // Create the folder
             AssetDatabase.CreateFolder("Assets", "BackendEngin");
+            Debug.Log("created");
 
             // Now move the contents of the Editor folder into the new folder
             string editorSourcePath = "Packages/com.asoft.backendengine/Editor"; // Adjust this path to your Editor folder location
@@ -34,5 +36,7 @@ public static class PackageInitializer
             // Refresh the AssetDatabase to reflect the changes
             AssetDatabase.Refresh();
         }
+        Debug.Log("ignore");
+
     }
 }
