@@ -22,7 +22,7 @@ public static class PackageInitializer
             Debug.Log("created");
 
             // Now move the contents of the Editor folder into the new folder
-            string editorSourcePath = "Packages/com.asoft.backendengine/Editor"; // Adjust this path to your Editor folder location
+            string editorSourcePath = "Packages/com.asoft.backendengine/Editor/BackendEngin"; // Adjust this path to your Editor folder location
             string[] files = System.IO.Directory.GetFiles(editorSourcePath, "*.*", System.IO.SearchOption.TopDirectoryOnly);
 
             foreach (string file in files)
