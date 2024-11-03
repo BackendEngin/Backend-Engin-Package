@@ -4,7 +4,9 @@
   "displayName": "Backend Engine",
   "description": "A backend engine for managing user registration and login.",
   "unity": "2020.3",
-  "dependencies": {},
+  "dependencies": {
+    "com.unity.editor": "1.0.0"
+  },
   "author": {
     "name": "Alireza sharif",
     "email": "alirezasharif1995@gmail.com"
