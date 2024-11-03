@@ -1,33 +1,28 @@
-using System;
 using System.Collections;
 using Newtonsoft.Json;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
-using System.Security.Cryptography.X509Certificates;
-using System.IO;
 
 public class AppConfig : MonoBehaviour
 {
-    private string baseUrl = "https://localhost"; // Update with your domain
-    public string AdminID;
-
-    [ReadOnly]
-    public bool serverConnected = false;
+    private readonly string _adminUrl = "https://localhost";
+    public string adminID;
+    [ReadOnly] public bool serverConnected = false;
 
     public void Start()
     {
-        if (string.IsNullOrEmpty(baseUrl))
+        if (string.IsNullOrEmpty(_adminUrl))
         {
             Debug.LogError("Please enter baseURL in Server Manager");
         }
-        else if (string.IsNullOrEmpty(AdminID))
+        else if (string.IsNullOrEmpty(adminID))
         {
             Debug.LogError("Please enter a valid ID");
         }
         else
         {
-            StartCoroutine(LoginCoroutine(AdminID));
+            StartCoroutine(LoginCoroutine(adminID));
         }
     }
 
@@ -36,21 +31,21 @@ public class AppConfig : MonoBehaviour
         var admin = new AdminPanel { ID = ID };
         string json = JsonConvert.SerializeObject(admin);
 
-        using (UnityWebRequest www = new UnityWebRequest(baseUrl + "/loginAdmin/inAppLogin", "POST"))
+        using (UnityWebRequest www = new UnityWebRequest(_adminUrl + "/loginAdmin/inAppLogin", "POST"))
         {
             byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
             www.uploadHandler = new UploadHandlerRaw(bodyRaw);
             www.downloadHandler = new DownloadHandlerBuffer();
             www.SetRequestHeader("Content-Type", "application/json");
 
-            www.certificateHandler = new BypassCertificate(); 
+            www.certificateHandler = new BypassCertificate();
 
             yield return www.SendWebRequest();
             if (www.result == UnityWebRequest.Result.Success)
             {
                 try
                 {
-print(www.downloadHandler.text);
+                    print(www.downloadHandler.text);
                     LoginResponse response = JsonConvert.DeserializeObject<LoginResponse>(www.downloadHandler.text);
                     admin = response.user;
                     serverConnected = true;
@@ -86,12 +81,10 @@ print(www.downloadHandler.text);
         public AdminPanel user;
     }
 
-    // Custom certificate handler to bypass certificate validation
     private class BypassCertificate : CertificateHandler
     {
         protected override bool ValidateCertificate(byte[] certificateData)
         {
-            // Always return true for debugging purposes
             return true;
         }
     }
