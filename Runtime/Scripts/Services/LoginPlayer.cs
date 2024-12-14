@@ -29,9 +29,11 @@ namespace backendEngin
             }
 
             // Send the request and get the response
-            APIResponse response = await RendRequest.SendAPIRequest(RequestData);
+            APIResponse response = await SendRequest.SendAPIRequest(RequestData);
         
             // Return the player ID if successful, otherwise 0
+            PlayerPrefs.SetInt("playerID",response.Data.ID);
+            PlayerPrefs.SetString("playerJWToken",response.Data.JwToken);
             return response.IsSuccess ? response.Data.ID : 0;
         }
     } 

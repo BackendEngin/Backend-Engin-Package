@@ -1,5 +1,6 @@
 [System.Serializable]
 public class Events
 {
-    public string name;
+    public string eventName;
+    public string eventType;
 }

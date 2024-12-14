@@ -6,4 +6,6 @@ public class RequestData
     public string schemaID;
     public string requestType;
     public string requestURL;
+    public string jwToken;
+
 }

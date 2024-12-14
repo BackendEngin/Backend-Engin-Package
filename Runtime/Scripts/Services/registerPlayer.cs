@@ -25,7 +25,7 @@ namespace backendEngin
                 label = label,
                 tags = tags
             };
-            APIResponse response = await RendRequest.SendAPIRequest(RequestData);
+            APIResponse response = await SendRequest.SendAPIRequest(RequestData);
             return response.IsSuccess ? response.Data.ID : 0;
         }
     }
