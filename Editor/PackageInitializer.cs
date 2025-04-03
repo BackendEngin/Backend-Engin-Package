@@ -7,14 +7,15 @@ public static class PackageInitializer
     [MenuItem("Tools/Run Package Initializer")]
     public static void Run()
     {
-        Debug.Log("🚀 Package Initializer started!");
+        Debug.LogError("🚀 Run() executed!"); // این باید در کنسول بیاید
         CreateFolderIfNotExists();
     }
 
     private static void CreateFolderIfNotExists()
     {
-        string folderPath = "Assets/BackendEngin";
+        Debug.LogError("🚀 CreateFolderIfNotExists() started!");
 
+        string folderPath = "Assets/BackendEngin";
         if (!AssetDatabase.IsValidFolder(folderPath))
         {
             Debug.Log($"⚡ Creating folder: {folderPath}");
@@ -29,7 +30,6 @@ public static class PackageInitializer
         }
 
         string editorSourcePath = "Packages/com.asoft.backendengine/Editor/BackendEngin";
-
         if (!Directory.Exists(editorSourcePath))
         {
             Debug.LogError($"❌ Source folder does NOT exist: {editorSourcePath}");
