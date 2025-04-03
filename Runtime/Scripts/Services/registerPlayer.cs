@@ -5,7 +5,7 @@ namespace backendEngin
 {
     public class RegisterPlayer : Request
     {
-        public static async Task<int> Register(string email, string password, string location, string username,
+        public static async Task<string> Register(string email, string password, string location, string username,
             string phoneNumber,
             string label, string tags)
         {
@@ -26,7 +26,7 @@ namespace backendEngin
                 tags = tags
             };
             APIResponse response = await SendRequest.SendAPIRequest(RequestData);
-            return response.IsSuccess ? response.Data.ID : 0;
+            return response.Data.Message;
         }
     }
 }

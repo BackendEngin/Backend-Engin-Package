@@ -5,7 +5,7 @@ namespace backendEngin
 {
     public class LoginPlayer : Request
     {
-        public static async Task<int> Login(string emailOrPhone, string password, bool isEmail = true)
+        public static async Task<string> Login(string emailOrPhone, string password, bool isEmail = true)
         {
             // Set up the request data
             RequestData.requestURL = "/login";
@@ -30,11 +30,11 @@ namespace backendEngin
 
             // Send the request and get the response
             APIResponse response = await SendRequest.SendAPIRequest(RequestData);
-        
+
             // Return the player ID if successful, otherwise 0
             PlayerPrefs.SetInt("playerID",response.Data.ID);
             PlayerPrefs.SetString("playerJWToken",response.Data.JwToken);
-            return response.IsSuccess ? response.Data.ID : 0;
+            return response.Data.Message;
         }
     } 
 }

@@ -25,16 +25,16 @@ public class LoginPlayers : MonoBehaviour
         bool isUsingEmail = useEmailToggle.isOn;
 
         // Call the Login method from the LoginPlayer class, passing the input values
-        int playerID = await LoginPlayer.Login(
+        string response = await LoginPlayer.Login(
             emailOrPhone.text,   // User's email or phone number from input field
             password.text,       // User's password from input field
             isUsingEmail         // Boolean to indicate whether we're using email or phone number
         );
 
         // Check if login was successful (playerID > 0 means success)
-        if (playerID > 0)
+        if (response == "Registered Success")
         {
-            Debug.Log("Login successful! Player ID: " + playerID);
+            Debug.Log("Login successful! Player ID: ");
         }
         else
         {

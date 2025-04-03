@@ -25,7 +25,7 @@ public class RegisterPlayers : MonoBehaviour
     {
         // Call the Register method from the registerPlayer class, passing the input values
         // Wait for the registration to complete and get the player's ID
-        int playerID = await RegisterPlayer.Register(
+        string response = await RegisterPlayer.Register(
             email.text,           // User's email from input field
             password.text,        // User's password from input field
             location.text,        // User's location from input field
@@ -35,7 +35,14 @@ public class RegisterPlayers : MonoBehaviour
             "tags"                // A placeholder for tags, can be adjusted based on requirements
         );
 
-        // Log the player's ID to the console after successful registration
-        Debug.Log("Player ID: " + playerID);
+        if (response == "Registered Success")
+        {
+            Debug.Log("Registered Success");
+        }
+        else
+        {
+            if (response == "email is already registered")
+                Debug.Log("!ﻩﺪﺷ ﻡﺎﻧ ﺖﺒﺛ ﻼﺒﻗ ﻞﯿﻤﯾﺍ ﻦﯾﺍ ﺎﺑ");
+        }
     }
 }
