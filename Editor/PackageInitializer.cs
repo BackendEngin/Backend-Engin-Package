@@ -32,50 +32,65 @@ public static class PackageInitializer
             return;
         }
 
-        // کپی تمام محتویات دایرکتوری
+        // کپی کردن فولدرها و محتویات‌شان
         CopyDirectoryContents(editorSourcePath, folderPath);
 
+        // رفرش کردن دیتابیس یونیتی
         AssetDatabase.Refresh();
         Debug.Log("✅ PackageInitializer completed!");
     }
 
     private static void CopyDirectoryContents(string sourceDir, string destDir)
     {
-        // تمام فایل‌ها رو از sourceDir به destDir کپی می‌کنیم
+        // ابتدا بررسی می‌کنیم که دایرکتوری مقصد وجود داشته باشه یا نه
+        if (!Directory.Exists(destDir))
+        {
+            Directory.CreateDirectory(destDir);
+            Debug.Log($"✅ Created destination directory: {destDir}");
+        }
+
+        // گرفتن تمام فایل‌ها از دایرکتوری مبدا (شامل فایل‌ها و زیر دایرکتوری‌ها)
         string[] files = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories);
 
         foreach (string file in files)
         {
-            string fileName = Path.GetFileName(file);
-            string destPath = Path.Combine(destDir, fileName);
+            string relativePath = file.Substring(sourceDir.Length + 1); // حذف مسیر پایه
+            string destPath = Path.Combine(destDir, relativePath);
 
-            Debug.Log($"🔄 Processing file: {fileName}");
-            Debug.Log($"Source file: {file}");
-            Debug.Log($"Destination path: {destPath}");
-
-            if (File.Exists(file)) // Ensure the source file exists
+            string destFolder = Path.GetDirectoryName(destPath);
+            // اطمینان از ایجاد پوشه‌های مورد نیاز در مقصد
+            if (!Directory.Exists(destFolder))
             {
-                try
+                Directory.CreateDirectory(destFolder);
+                Debug.Log($"✅ Created folder: {destFolder}");
+            }
+
+            Debug.Log($"🔄 Copying {file} to {destPath}");
+
+            // کپی کردن فایل‌ها به مقصد
+            try
+            {
+                if (File.Exists(file))
                 {
                     bool copySuccess = AssetDatabase.CopyAsset(file, destPath);
                     if (copySuccess)
                     {
-                        Debug.Log($"✅ Successfully copied {fileName} to {destDir}");
+                        Debug.Log($"✅ Successfully copied {file} to {destPath}");
                         AssetDatabase.ImportAsset(destPath);  // Make sure the asset is imported properly
                     }
                     else
                     {
-                        Debug.LogError($"❌ Failed to copy {fileName} to {destDir}");
+                        Debug.LogError($"❌ Failed to copy {file} to {destPath}");
                     }
                 }
-                catch (System.Exception ex)
+                else
                 {
-                    Debug.LogError($"❌ Error copying {fileName}: {ex.Message}");
+                    Debug.LogError($"❌ Source file does not exist: {file}");
                 }
             }
-            else
+            catch (System.Exception ex)
             {
-                Debug.LogError($"❌ Source file does not exist: {file}");
+                Debug.LogError($"❌ Error copying {file}: {ex.Message}");
             }
         }
     }
