@@ -32,13 +32,22 @@ public static class PackageInitializer
             return;
         }
 
-        string[] files = Directory.GetFiles(editorSourcePath, "*.*", SearchOption.TopDirectoryOnly);
-        Debug.Log($"📦 Found {files.Length} files in {editorSourcePath}");
+        // کپی تمام محتویات دایرکتوری
+        CopyDirectoryContents(editorSourcePath, folderPath);
+
+        AssetDatabase.Refresh();
+        Debug.Log("✅ PackageInitializer completed!");
+    }
+
+    private static void CopyDirectoryContents(string sourceDir, string destDir)
+    {
+        // تمام فایل‌ها رو از sourceDir به destDir کپی می‌کنیم
+        string[] files = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories);
 
         foreach (string file in files)
         {
             string fileName = Path.GetFileName(file);
-            string destPath = Path.Combine(folderPath, fileName);
+            string destPath = Path.Combine(destDir, fileName);
 
             Debug.Log($"🔄 Processing file: {fileName}");
             Debug.Log($"Source file: {file}");
@@ -51,12 +60,12 @@ public static class PackageInitializer
                     bool copySuccess = AssetDatabase.CopyAsset(file, destPath);
                     if (copySuccess)
                     {
-                        Debug.Log($"✅ Successfully copied {fileName} to {folderPath}");
+                        Debug.Log($"✅ Successfully copied {fileName} to {destDir}");
                         AssetDatabase.ImportAsset(destPath);  // Make sure the asset is imported properly
                     }
                     else
                     {
-                        Debug.LogError($"❌ Failed to copy {fileName} to {folderPath}");
+                        Debug.LogError($"❌ Failed to copy {fileName} to {destDir}");
                     }
                 }
                 catch (System.Exception ex)
@@ -69,8 +78,5 @@ public static class PackageInitializer
                 Debug.LogError($"❌ Source file does not exist: {file}");
             }
         }
-
-        AssetDatabase.Refresh();
-        Debug.Log("✅ PackageInitializer completed!");
     }
 }
