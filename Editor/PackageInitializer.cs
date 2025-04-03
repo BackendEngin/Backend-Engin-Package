@@ -14,6 +14,7 @@ public static class PackageInitializer
     private static void CreateFolderIfNotExists()
     {
         string folderPath = "Assets/BackendEngin";
+        Debug.Log($"Checking if folder exists at: {folderPath}");
 
         if (!AssetDatabase.IsValidFolder(folderPath))
         {
@@ -23,6 +24,7 @@ public static class PackageInitializer
         }
 
         string editorSourcePath = "Packages/com.asoft.backendengine/Editor/BackendEngin";
+        Debug.Log($"Source folder path: {editorSourcePath}");
 
         if (!Directory.Exists(editorSourcePath))
         {
@@ -31,20 +33,40 @@ public static class PackageInitializer
         }
 
         string[] files = Directory.GetFiles(editorSourcePath, "*.*", SearchOption.TopDirectoryOnly);
+        Debug.Log($"📦 Found {files.Length} files in {editorSourcePath}");
 
         foreach (string file in files)
         {
             string fileName = Path.GetFileName(file);
             string destPath = Path.Combine(folderPath, fileName);
 
-            if (AssetDatabase.CopyAsset(file, destPath))
+            Debug.Log($"🔄 Processing file: {fileName}");
+            Debug.Log($"Source file: {file}");
+            Debug.Log($"Destination path: {destPath}");
+
+            if (File.Exists(file)) // Ensure the source file exists
             {
-                Debug.Log($"✅ Copied {fileName} to {folderPath}");
-                AssetDatabase.ImportAsset(destPath);  // Make sure the asset is imported properly
+                try
+                {
+                    bool copySuccess = AssetDatabase.CopyAsset(file, destPath);
+                    if (copySuccess)
+                    {
+                        Debug.Log($"✅ Successfully copied {fileName} to {folderPath}");
+                        AssetDatabase.ImportAsset(destPath);  // Make sure the asset is imported properly
+                    }
+                    else
+                    {
+                        Debug.LogError($"❌ Failed to copy {fileName} to {folderPath}");
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"❌ Error copying {fileName}: {ex.Message}");
+                }
             }
             else
             {
-                Debug.LogError($"❌ Failed to copy {fileName} to {folderPath}");
+                Debug.LogError($"❌ Source file does not exist: {file}");
             }
         }
 
