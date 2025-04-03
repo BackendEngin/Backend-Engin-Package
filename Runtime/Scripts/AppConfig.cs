@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 public class AppConfig : MonoBehaviour
 {
-    private readonly string _adminUrl = "https://localhost";
+    private readonly string _adminUrl = "https://185.173.104.193:90";
     public string adminID;
     [ReadOnly] public bool serverConnected = false;
 
