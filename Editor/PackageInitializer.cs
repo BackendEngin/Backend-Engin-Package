@@ -7,53 +7,40 @@ public static class PackageInitializer
     [MenuItem("Tools/Run Package Initializer")]
     public static void Run()
     {
-        Debug.LogError("🚀 Run() executed!"); // این باید در کنسول بیاید
+        Debug.Log("🚀 Running Package Initializer...");
         CreateFolderIfNotExists();
     }
 
     private static void CreateFolderIfNotExists()
     {
-        Debug.LogError("🚀 CreateFolderIfNotExists() started!");
-
         string folderPath = "Assets/BackendEngin";
+
         if (!AssetDatabase.IsValidFolder(folderPath))
         {
             Debug.Log($"⚡ Creating folder: {folderPath}");
-            string guid = AssetDatabase.CreateFolder("Assets", "BackendEngin");
-            if (!string.IsNullOrEmpty(guid))
-                Debug.Log($"✅ Folder created: {folderPath}");
-            else
-            {
-                Debug.LogError($"❌ Failed to create folder: {folderPath}");
-                return;
-            }
+            AssetDatabase.CreateFolder("Assets", "BackendEngin");
+            Debug.Log($"✅ Folder created: {folderPath}");
         }
 
         string editorSourcePath = "Packages/com.asoft.backendengine/Editor/BackendEngin";
+
         if (!Directory.Exists(editorSourcePath))
         {
             Debug.LogError($"❌ Source folder does NOT exist: {editorSourcePath}");
             return;
         }
-        else
-        {
-            Debug.Log($"📂 Source folder found: {editorSourcePath}");
-        }
 
         string[] files = Directory.GetFiles(editorSourcePath, "*.*", SearchOption.TopDirectoryOnly);
-        Debug.Log($"📦 Found {files.Length} files in {editorSourcePath}");
 
         foreach (string file in files)
         {
             string fileName = Path.GetFileName(file);
-            string srcPath = $"{editorSourcePath}/{fileName}";
-            string destPath = $"{folderPath}/{fileName}";
+            string destPath = Path.Combine(folderPath, fileName);
 
-            Debug.Log($"🔄 Processing file: {fileName}");
-
-            if (AssetDatabase.CopyAsset(srcPath, destPath))
+            if (AssetDatabase.CopyAsset(file, destPath))
             {
                 Debug.Log($"✅ Copied {fileName} to {folderPath}");
+                AssetDatabase.ImportAsset(destPath);  // Make sure the asset is imported properly
             }
             else
             {
