@@ -1,42 +1,85 @@
 using UnityEditor;
 using UnityEngine;
+using System.IO;
 
 [InitializeOnLoad]
 public static class PackageInitializer
 {
-    // Static constructor that runs when the editor loads
     static PackageInitializer()
     {
+        Debug.Log("🚀 PackageInitializer started");
         CreateFolderIfNotExists();
     }
 
     private static void CreateFolderIfNotExists()
     {
-        Debug.Log("started");
-        string folderPath = "Assets/BackendEngin"; // Change this to your desired folder path
+        string folderPath = "Assets/BackendEngin";
 
-        if (!AssetDatabase.IsValidFolder(folderPath))
+        // بررسی وجود فولدر
+        if (AssetDatabase.IsValidFolder(folderPath))
         {
-            // Create the folder
-            AssetDatabase.CreateFolder("Assets", "BackendEngin");
-            Debug.Log("created");
-
-            // Now move the contents of the Editor folder into the new folder
-            string editorSourcePath = "Packages/com.asoft.backendengine/Editor/BackendEngin"; // Adjust this path to your Editor folder location
-            string[] files = System.IO.Directory.GetFiles(editorSourcePath, "*.*", System.IO.SearchOption.TopDirectoryOnly);
-
-            foreach (string file in files)
+            Debug.Log($"✅ Folder already exists: {folderPath}");
+        }
+        else
+        {
+            Debug.Log($"⚡ Folder does NOT exist, creating: {folderPath}");
+            string guid = AssetDatabase.CreateFolder("Assets", "BackendEngin");
+            if (!string.IsNullOrEmpty(guid))
             {
-                string fileName = System.IO.Path.GetFileName(file);
-                string destPath = System.IO.Path.Combine(folderPath, fileName);
-                System.IO.File.Copy(file, destPath);
-                Debug.Log($"Copied {fileName} to {folderPath}");
+                Debug.Log($"✅ Folder created successfully: {folderPath}");
+            }
+            else
+            {
+                Debug.LogError($"❌ Failed to create folder: {folderPath}");
+                return;
+            }
+        }
+
+        string editorSourcePath = "Packages/com.asoft.backendengine/Editor/BackendEngin"; 
+
+        // بررسی اینکه مسیر سورس وجود دارد یا نه
+        if (!Directory.Exists(editorSourcePath))
+        {
+            Debug.LogError($"❌ Source folder does NOT exist: {editorSourcePath}");
+            return;
+        }
+        else
+        {
+            Debug.Log($"📂 Source folder found: {editorSourcePath}");
+        }
+
+        string[] files = Directory.GetFiles(editorSourcePath, "*.*", SearchOption.TopDirectoryOnly);
+        Debug.Log($"📦 Found {files.Length} files in {editorSourcePath}");
+
+        foreach (string file in files)
+        {
+            string fileName = Path.GetFileName(file);
+            string destPath = Path.Combine(folderPath, fileName);
+            string unitySourcePath = editorSourcePath + "/" + fileName;
+            string unityDestPath = folderPath + "/" + fileName;
+
+            Debug.Log($"🔄 Processing file: {fileName}");
+
+            // بررسی اینکه فایل مقصد از قبل وجود دارد یا نه
+            if (File.Exists(destPath))
+            {
+                Debug.Log($"⚠️ File already exists: {destPath}, skipping...");
+                continue;
             }
 
-            // Refresh the AssetDatabase to reflect the changes
-            AssetDatabase.Refresh();
+            // استفاده از CopyAsset
+            bool success = AssetDatabase.CopyAsset(unitySourcePath, unityDestPath);
+            if (success)
+            {
+                Debug.Log($"✅ Copied {fileName} to {folderPath}");
+            }
+            else
+            {
+                Debug.LogError($"❌ Failed to copy {fileName} to {folderPath}");
+            }
         }
-        Debug.Log("ignore");
 
+        AssetDatabase.Refresh();
+        Debug.Log("✅ PackageInitializer completed!");
     }
 }
