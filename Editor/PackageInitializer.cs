@@ -7,15 +7,14 @@ public static class PackageInitializer
     [MenuItem("Tools/Run Package Initializer")]
     public static void Run()
     {
-        Debug.LogError("🚨 Run() executed!"); // این لاگ باید حتماً چاپ شود
+        Debug.Log("🚀 Package Initializer started!");
         CreateFolderIfNotExists();
     }
 
     private static void CreateFolderIfNotExists()
     {
-        Debug.LogError("🚨 CreateFolderIfNotExists() started!");
-
         string folderPath = "Assets/BackendEngin";
+
         if (!AssetDatabase.IsValidFolder(folderPath))
         {
             Debug.Log($"⚡ Creating folder: {folderPath}");
@@ -30,6 +29,7 @@ public static class PackageInitializer
         }
 
         string editorSourcePath = "Packages/com.asoft.backendengine/Editor/BackendEngin";
+
         if (!Directory.Exists(editorSourcePath))
         {
             Debug.LogError($"❌ Source folder does NOT exist: {editorSourcePath}");
@@ -46,24 +46,18 @@ public static class PackageInitializer
         foreach (string file in files)
         {
             string fileName = Path.GetFileName(file);
-            string destPath = Path.Combine(folderPath, fileName);
+            string srcPath = $"{editorSourcePath}/{fileName}";
+            string destPath = $"{folderPath}/{fileName}";
 
             Debug.Log($"🔄 Processing file: {fileName}");
 
-            if (File.Exists(destPath))
+            if (AssetDatabase.CopyAsset(srcPath, destPath))
             {
-                Debug.Log($"⚠️ File already exists: {destPath}, skipping...");
-                continue;
-            }
-
-            try
-            {
-                FileUtil.CopyFileOrDirectory(file, destPath);
                 Debug.Log($"✅ Copied {fileName} to {folderPath}");
             }
-            catch (System.Exception ex)
+            else
             {
-                Debug.LogError($"❌ Failed to copy {fileName}: {ex.Message}");
+                Debug.LogError($"❌ Failed to copy {fileName} to {folderPath}");
             }
         }
 
