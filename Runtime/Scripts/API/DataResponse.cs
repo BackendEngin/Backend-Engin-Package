@@ -7,6 +7,7 @@ public class DataResponse
     public int HighScore { get; set; }
     public int DefenceLevel { get; set; }
     public int AttackLevel { get; set; }
+    public int PlayerLevel { get; set; }
 
     public string JwToken { get; set; }
 }

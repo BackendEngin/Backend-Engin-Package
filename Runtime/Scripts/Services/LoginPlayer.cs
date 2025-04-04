@@ -37,6 +37,7 @@ namespace backendEngin
             PlayerPrefs.SetInt("DefenseLevel",response.Data.DefenceLevel);
             PlayerPrefs.SetInt("DamageLevel",response.Data.AttackLevel);
             PlayerPrefs.SetInt("highscore",response.Data.HighScore);
+            PlayerPrefs.SetInt("PlayerLevel",response.Data.PlayerLevel);
             PlayerPrefs.SetString("playerJWToken",response.Data.JwToken);
             return response.Data.Message;
         }
