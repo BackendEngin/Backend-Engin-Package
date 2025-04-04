@@ -12,20 +12,21 @@ namespace backendEngin
             RequestData.requestType = "POST";
             RequestData.schemaID = PlayerPrefs.GetString("schemaID");
 
-            var userData = new Dictionary<string, object>
+            var updateUserData = new UpdateUserData
             {
-                { "email", email }
+                email = email,
             };
 
-            if (coins.HasValue) userData["coins"] = coins.Value;
-            if (highScore.HasValue) userData["highScore"] = highScore.Value;
-            if (defenceLevel.HasValue) userData["defenceLevel"] = defenceLevel.Value;
-            if (attackLevel.HasValue) userData["attackLevel"] = attackLevel.Value;
+            if (coins.HasValue) updateUserData.coins = coins.Value;
+            if (highScore.HasValue) updateUserData.highScore = highScore.Value;
+            if (defenceLevel.HasValue) updateUserData.defenceLevel = defenceLevel.Value;
+            if (attackLevel.HasValue) updateUserData.attackLevel = attackLevel.Value;
 
-            RequestData.UpdateUser = userData;
+            RequestData.updateUser = updateUserData;
 
             APIResponse response = await SendRequest.SendAPIRequest(RequestData);
             return response.Data.Message;
         }
+
     }
 }

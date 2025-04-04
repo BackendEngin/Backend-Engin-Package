@@ -1,7 +1,7 @@
 [System.Serializable]
 public class RequestData
 {
-    public object UpdateUser;
+    public UpdateUserData updateUser;
     public User user;
     public Events events;
     public string schemaID;
