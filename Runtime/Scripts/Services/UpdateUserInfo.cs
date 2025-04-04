@@ -6,7 +6,7 @@ namespace backendEngin
 {
     public class UpdateUserInfo : Request
     {
-        public static async Task<string> UpdateInfo(string email, int? coins = null, int? highScore = null, int? defenceLevel = null, int? attackLevel = null)
+        public static async Task<string> UpdateInfo(string email, int? coins = null, int? highScore = null, int? defenceLevel = null, int? attackLevel = null, int? playerLevel = null)
         {
             RequestData.requestURL = "/updateUserInfo";
             RequestData.requestType = "POST";
@@ -18,7 +18,8 @@ namespace backendEngin
                 coins = coins ?? 0,
                 highScore = highScore ?? 0,
                 attackLevel = attackLevel ?? 0,
-                defenceLevel = defenceLevel ?? 0
+                defenceLevel = defenceLevel ?? 0,
+                playerLevel = playerLevel ?? 0
             };
 
             if (coins.HasValue) updateUserData.coins = coins.Value;
