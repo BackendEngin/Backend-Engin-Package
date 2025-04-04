@@ -25,7 +25,8 @@ namespace backendEngin
                 label = label,
                 tags = tags
             };
-            APIResponse response = await SendRequest.SendAPIRequest(RequestData);
+            APIResponse response = await SendRequest.SendAPIRequest(RequestData); 
+            PlayerPrefs.SetInt("playerID", response.Data.ID);
             return response.Data.Message;
         }
     }
