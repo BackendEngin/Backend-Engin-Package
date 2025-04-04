@@ -30,15 +30,17 @@ namespace backendEngin
 
             // Send the request and get the response
             APIResponse response = await SendRequest.SendAPIRequest(RequestData);
-
-            // Return the player ID if successful, otherwise 0
-            PlayerPrefs.SetInt("playerID",response.Data.ID);
-            PlayerPrefs.SetInt("coin",response.Data.Coins);
-            PlayerPrefs.SetInt("DefenseLevel",response.Data.DefenceLevel);
-            PlayerPrefs.SetInt("DamageLevel",response.Data.AttackLevel);
-            PlayerPrefs.SetInt("highscore",response.Data.HighScore);
-            PlayerPrefs.SetInt("PlayerLevel",response.Data.PlayerLevel);
-            PlayerPrefs.SetString("playerJWToken",response.Data.JwToken);
+            if (response.Data.Message == "Login successful")
+            {
+                // Return the player ID if successful, otherwise 0
+                PlayerPrefs.SetInt("playerID",response.Data.ID);
+                PlayerPrefs.SetInt("coin",response.Data.Coins);
+                PlayerPrefs.SetInt("DefenseLevel",response.Data.DefenceLevel);
+                PlayerPrefs.SetInt("DamageLevel",response.Data.AttackLevel);
+                PlayerPrefs.SetInt("highscore",response.Data.HighScore);
+                PlayerPrefs.SetInt("PlayerLevel",response.Data.PlayerLevel);
+                PlayerPrefs.SetString("playerJWToken",response.Data.JwToken);
+            }
             return response.Data.Message;
         }
     } 
