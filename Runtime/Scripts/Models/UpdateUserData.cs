@@ -7,4 +7,5 @@ public class UpdateUserData
     public int highScore;
     public int defenceLevel;
     public int attackLevel;
+    public int playerLevel;
 }
