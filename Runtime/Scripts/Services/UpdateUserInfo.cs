@@ -15,6 +15,10 @@ namespace backendEngin
             var updateUserData = new UpdateUserData
             {
                 email = email,
+                coins = coins ?? 0,
+                highScore = highScore ?? 0,
+                attackLevel = attackLevel ?? 0,
+                defenceLevel = defenceLevel ?? 0,
             };
 
             if (coins.HasValue) updateUserData.coins = coins.Value;
